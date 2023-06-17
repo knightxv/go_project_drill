@@ -1,3 +1,3 @@
-module github.com/YOUR-USER-OR-ORG-NAME/YOUR-REPO-NAME
+module github.com/knightxv/go-project-drill
 
 go 1.14
