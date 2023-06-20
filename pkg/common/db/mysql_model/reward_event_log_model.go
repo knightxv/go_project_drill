@@ -3,7 +3,7 @@ package mysql_model
 import (
 	"time"
 
-	"github.com/idchats/user_score/pkg/common/db"
+	"github.com/knightxv/go-project-drill/pkg/common/db"
 	"gorm.io/gorm"
 )
 

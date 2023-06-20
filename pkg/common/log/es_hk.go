@@ -14,7 +14,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/idchats/user_score/pkg/common/config"
+	"github.com/knightxv/go-project-drill/pkg/common/config"
 	elasticV7 "github.com/olivere/elastic/v7"
 	"github.com/sirupsen/logrus"
 )

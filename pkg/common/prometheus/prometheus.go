@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/idchats/user_score/pkg/common/config"
+	"github.com/knightxv/go-project-drill/pkg/common/config"
 
 	"github.com/gin-gonic/gin"
 	"github.com/prometheus/client_golang/prometheus"

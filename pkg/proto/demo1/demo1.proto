@@ -1,0 +1,23 @@
+syntax = "proto3";
+
+// import "pkg/proto/common/common.proto"
+
+option go_package = "/demo1";
+
+package demo1;
+
+message CommonResp{
+    int32   errCode = 1;
+    string  errMsg = 2;
+}
+
+message GetFriendFromDBReq {
+  string OperationID = 1;
+}
+message GetFriendFromDBResp {
+  CommonResp CommonResp = 1;
+}
+
+service chainService{
+    rpc GetFriendFromDB(GetFriendFromDBReq) returns (GetFriendFromDBResp);
+}

@@ -5,9 +5,9 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/idchats/user_score/pkg/common/config"
-	"github.com/idchats/user_score/pkg/common/log"
-	"github.com/idchats/user_score/pkg/utils"
+	"github.com/knightxv/go-project-drill/pkg/common/config"
+	"github.com/knightxv/go-project-drill/pkg/common/log"
+	"github.com/knightxv/go-project-drill/pkg/utils"
 	"go.etcd.io/etcd/api/v3/mvccpb"
 	clientv3 "go.etcd.io/etcd/client/v3"
 
@@ -325,7 +325,6 @@ func NewPool(schema, etcdaddr, servicename string) *Pool {
 func GetGrpcConn(schema, etcdaddr, servicename string) *grpc.ClientConn {
 	return nameResolver[schema+servicename].grpcClientConn
 }
-
 
 func GetDefaultGatewayConn4Unique(schema, etcdaddr, operationID string) []*grpc.ClientConn {
 	IsUpdateStartMtx.Lock()

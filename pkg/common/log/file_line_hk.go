@@ -10,7 +10,7 @@ import (
 	"runtime"
 	"strings"
 
-	"github.com/idchats/user_score/pkg/utils"
+	"github.com/knightxv/go-project-drill/pkg/utils"
 	"github.com/sirupsen/logrus"
 )
 

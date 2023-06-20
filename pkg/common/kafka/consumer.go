@@ -3,7 +3,7 @@ package kafka
 import (
 	"sync"
 
-	"github.com/idchats/user_score/pkg/common/config"
+	"github.com/knightxv/go-project-drill/pkg/common/config"
 
 	"github.com/Shopify/sarama"
 )

@@ -3,8 +3,8 @@ package kafka
 import (
 	"errors"
 
-	"github.com/idchats/user_score/pkg/common/config"
-	log "github.com/idchats/user_score/pkg/common/log"
+	"github.com/knightxv/go-project-drill/pkg/common/config"
+	log "github.com/knightxv/go-project-drill/pkg/common/log"
 
 	"github.com/Shopify/sarama"
 	"github.com/golang/protobuf/proto"

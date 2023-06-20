@@ -4,9 +4,9 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/idchats/user_score/pkg/common/db"
-	"github.com/idchats/user_score/pkg/common/log"
-	"github.com/idchats/user_score/pkg/utils"
+	"github.com/knightxv/go-project-drill/pkg/common/db"
+	"github.com/knightxv/go-project-drill/pkg/common/log"
+	"github.com/knightxv/go-project-drill/pkg/utils"
 )
 
 const (

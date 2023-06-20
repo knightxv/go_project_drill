@@ -1,23 +1,37 @@
 package demo1
 
-// @Summary		创建一条工作圈
-// @Description	用户创建一条工作圈
-// @Tags			工作圈
+import (
+	"context"
+	"net/http"
+	"strings"
+
+	"github.com/gin-gonic/gin"
+	api "github.com/knightxv/go-project-drill/pkg/base_info"
+	"github.com/knightxv/go-project-drill/pkg/common/config"
+	"github.com/knightxv/go-project-drill/pkg/common/log"
+	"github.com/knightxv/go-project-drill/pkg/grpc-etcdv3/getcdv3"
+	pbDemo1 "github.com/knightxv/go-project-drill/pkg/proto/demo1"
+	"github.com/knightxv/go-project-drill/pkg/utils"
+)
+
+// @Summary
+// @Description	获取好友
+// @Tags			好友
 // @ID				CreateOneWorkMoment
 // @Accept			json
 // @Param			token	header	string						true	"im token"
-// @Param			req		body	api.CreateOneWorkMomentReq	true	"请求 atUserList likeUserList permissionGroupList permissionUserList 字段中userName可以不填"
+// @Param			req		body	api.GetFriendFromDB	true	"请求"
 // @Produce		json
 // @Success		0	{object}	api.CreateOneWorkMomentResp
 // @Failure		500	{object}	api.Swagger500Resp	"errCode为500 一般为服务器内部错误"
 // @Failure		400	{object}	api.Swagger400Resp	"errCode为400 一般为参数输入错误, token未带上等"
-// @Router			/office/create_one_work_moment [post]
-func CreateOneWorkMoment(c *gin.Context) {
+// @Router			/demo1/get_friend_from_db [get]
+func GetFriendFromDB(c *gin.Context) {
 	var (
-		req    api.CreateOneWorkMomentReq
-		resp   api.CreateOneWorkMomentResp
-		reqPb  pbOffice.CreateOneWorkMomentReq
-		respPb *pbOffice.CreateOneWorkMomentResp
+		req    api.ApiGetFriendFromDBReq
+		resp   api.ApiGetFriendFromDBResp
+		reqPb  pbDemo1.GetFriendFromDBReq
+		respPb *pbDemo1.GetFriendFromDBResp
 	)
 	if err := c.BindJSON(&req); err != nil {
 		log.NewError(req.OperationID, utils.GetSelfFuncName(), "bind json failed", err.Error())
@@ -29,8 +43,7 @@ func CreateOneWorkMoment(c *gin.Context) {
 	if err := utils.CopyStructFields(&reqPb, req); err != nil {
 		log.NewDebug(req.OperationID, utils.GetSelfFuncName(), "CopyStructFields failed", err.Error())
 	}
-	reqPb.WorkMoment.UserID = userID
-	etcdConn := getcdv3.GetDefaultConn(config.Config.Etcd.EtcdSchema, strings.Join(config.Config.Etcd.EtcdAddr, ","), config.Config.RpcRegisterName.OpenImOfficeName, req.OperationID)
+	etcdConn := getcdv3.GetDefaultConn(config.Config.Etcd.EtcdSchema, strings.Join(config.Config.Etcd.EtcdAddr, ","), config.Config.RpcRegisterName.OpenImRelayName, req.OperationID)
 	if etcdConn == nil {
 		errMsg := req.OperationID + "getcdv3.GetDefaultConn == nil"
 		log.NewError(req.OperationID, errMsg)
@@ -38,18 +51,17 @@ func CreateOneWorkMoment(c *gin.Context) {
 		return
 	}
 
-	client := pbOffice.NewOfficeServiceClient(etcdConn)
-	respPb, err := client.CreateOneWorkMoment(context.Background(), &reqPb)
+	client := pbDemo1.NewChainServiceClient(etcdConn)
+	respPb, err := client.GetFriendFromDB(context.Background(), &reqPb)
 	if err != nil {
 		log.NewError(req.OperationID, utils.GetSelfFuncName(), "CreateOneWorkMoment rpc failed", err.Error())
 		c.JSON(http.StatusInternalServerError, gin.H{"errCode": 500, "errMsg": "CreateOneWorkMoment rpc server failed" + err.Error()})
 		return
 	}
-	resp.CommResp = api.CommResp{
+	resp.ApiCommonResp = api.ApiCommonResp{
 		ErrCode: respPb.CommonResp.ErrCode,
 		ErrMsg:  respPb.CommonResp.ErrMsg,
 	}
 	log.NewInfo(req.OperationID, utils.GetSelfFuncName(), "resp: ", resp)
-	c.JSON(http.StatusOK,  gin.H{"errCode": 0, "errMsg": "success"})
+	c.JSON(http.StatusOK, resp)
 }
-

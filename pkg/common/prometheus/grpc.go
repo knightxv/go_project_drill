@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"time"
 
-	"github.com/idchats/user_score/pkg/common/log"
+	"github.com/knightxv/go-project-drill/pkg/common/log"
 
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/peer"

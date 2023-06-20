@@ -1,5 +1,14 @@
 package baseinfo
 
+type ApiCommonReq struct {
+	OperationID string `json:"operationID" binding:"required"`
+}
+
+type ApiCommonResp struct {
+	ErrCode int32  `json:"errCode" example:"400"`
+	ErrMsg  string `json:"errMsg"`
+}
+
 type RequestPagination struct {
 	PageNumber int `json:"pageNumber"  binding:"required"`
 	ShowNumber int `json:"showNumber"  binding:"required"`

@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/idchats/user_score/pkg/common/config"
+	"github.com/knightxv/go-project-drill/pkg/common/config"
 
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
