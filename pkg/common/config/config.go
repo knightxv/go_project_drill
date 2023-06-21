@@ -73,9 +73,7 @@ type config struct {
 		ChainUpPort              []int `yaml:"chainUpPort"`
 	}
 	RpcRegisterName struct {
-		UserScoreName   string `yaml:"userScoreName"`
-		ChainUpName     string `yaml:"chainUpName"`
-		OpenImRelayName string `yaml:"openImRelayName"`
+		Demo1   string `yaml:"demo1"`
 	}
 	Etcd struct {
 		EtcdSchema        string   `yaml:"etcdSchema"`

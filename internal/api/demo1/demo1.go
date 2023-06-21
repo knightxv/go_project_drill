@@ -15,14 +15,14 @@ import (
 )
 
 // @Summary
-// @Description	获取好友
+// @Description	从数据库获取好友列表
 // @Tags			好友
 // @ID				CreateOneWorkMoment
 // @Accept			json
 // @Param			token	header	string						true	"im token"
-// @Param			req		body	api.GetFriendFromDB	true	"请求"
+// @Param			req		body	api.ApiGetFriendFromDBReq	true	"请求"
 // @Produce		json
-// @Success		0	{object}	api.CreateOneWorkMomentResp
+// @Success		0	{object}	api.ApiGetFriendFromDBResp
 // @Failure		500	{object}	api.Swagger500Resp	"errCode为500 一般为服务器内部错误"
 // @Failure		400	{object}	api.Swagger400Resp	"errCode为400 一般为参数输入错误, token未带上等"
 // @Router			/demo1/get_friend_from_db [get]
@@ -43,7 +43,7 @@ func GetFriendFromDB(c *gin.Context) {
 	if err := utils.CopyStructFields(&reqPb, req); err != nil {
 		log.NewDebug(req.OperationID, utils.GetSelfFuncName(), "CopyStructFields failed", err.Error())
 	}
-	etcdConn := getcdv3.GetDefaultConn(config.Config.Etcd.EtcdSchema, strings.Join(config.Config.Etcd.EtcdAddr, ","), config.Config.RpcRegisterName.OpenImRelayName, req.OperationID)
+	etcdConn := getcdv3.GetDefaultConn(config.Config.Etcd.EtcdSchema, strings.Join(config.Config.Etcd.EtcdAddr, ","), config.Config.RpcRegisterName.Demo1, req.OperationID)
 	if etcdConn == nil {
 		errMsg := req.OperationID + "getcdv3.GetDefaultConn == nil"
 		log.NewError(req.OperationID, errMsg)
@@ -53,6 +53,109 @@ func GetFriendFromDB(c *gin.Context) {
 
 	client := pbDemo1.NewChainServiceClient(etcdConn)
 	respPb, err := client.GetFriendFromDB(context.Background(), &reqPb)
+	if err != nil {
+		log.NewError(req.OperationID, utils.GetSelfFuncName(), "CreateOneWorkMoment rpc failed", err.Error())
+		c.JSON(http.StatusInternalServerError, gin.H{"errCode": 500, "errMsg": "CreateOneWorkMoment rpc server failed" + err.Error()})
+		return
+	}
+	resp.ApiCommonResp = api.ApiCommonResp{
+		ErrCode: respPb.CommonResp.ErrCode,
+		ErrMsg:  respPb.CommonResp.ErrMsg,
+	}
+	log.NewInfo(req.OperationID, utils.GetSelfFuncName(), "resp: ", resp)
+	c.JSON(http.StatusOK, resp)
+}
+
+// @Summary
+// @Description	从redis获取好友列表
+// @Tags			好友
+// @ID				GetFriendFromRedis
+// @Accept			json
+// @Param			token	header	string						true	"im token"
+// @Param			req		body	api.ApiGetFriendFromRedisReq	true	"请求"
+// @Produce		json
+// @Success		0	{object}	api.ApiGetFriendFromRedisResp
+// @Failure		500	{object}	api.Swagger500Resp	"errCode为500 一般为服务器内部错误"
+// @Failure		400	{object}	api.Swagger400Resp	"errCode为400 一般为参数输入错误, token未带上等"
+// @Router			/demo1/get_friend_from_redis [get]
+func GetFriendFromRedis(c *gin.Context) {
+	var (
+		req    api.ApiGetFriendFromRedisReq
+		resp   api.ApiGetFriendFromRedisResp
+		reqPb  pbDemo1.GetFriendFromRedisReq
+		respPb *pbDemo1.GetFriendFromRedisResp
+	)
+	if err := c.BindJSON(&req); err != nil {
+		log.NewError(req.OperationID, utils.GetSelfFuncName(), "bind json failed", err.Error())
+		c.JSON(http.StatusBadRequest, gin.H{"errCode": 400, "errMsg": "bind json failed " + err.Error()})
+		return
+	}
+	log.NewInfo(req.OperationID, utils.GetSelfFuncName(), "req: ", req)
+
+	if err := utils.CopyStructFields(&reqPb, req); err != nil {
+		log.NewDebug(req.OperationID, utils.GetSelfFuncName(), "CopyStructFields failed", err.Error())
+	}
+	etcdConn := getcdv3.GetDefaultConn(config.Config.Etcd.EtcdSchema, strings.Join(config.Config.Etcd.EtcdAddr, ","), config.Config.RpcRegisterName.Demo1, req.OperationID)
+	if etcdConn == nil {
+		errMsg := req.OperationID + "getcdv3.GetDefaultConn == nil"
+		log.NewError(req.OperationID, errMsg)
+		c.JSON(http.StatusInternalServerError, gin.H{"errCode": 500, "errMsg": errMsg})
+		return
+	}
+
+	client := pbDemo1.NewChainServiceClient(etcdConn)
+	respPb, err := client.GetFriendFromRedis(context.Background(), &reqPb)
+	if err != nil {
+		log.NewError(req.OperationID, utils.GetSelfFuncName(), "CreateOneWorkMoment rpc failed", err.Error())
+		c.JSON(http.StatusInternalServerError, gin.H{"errCode": 500, "errMsg": "CreateOneWorkMoment rpc server failed" + err.Error()})
+		return
+	}
+	resp.ApiCommonResp = api.ApiCommonResp{
+		ErrCode: respPb.CommonResp.ErrCode,
+		ErrMsg:  respPb.CommonResp.ErrMsg,
+	}
+	log.NewInfo(req.OperationID, utils.GetSelfFuncName(), "resp: ", resp)
+	c.JSON(http.StatusOK, resp)
+}
+
+// @Summary
+// @Description	从本地缓存中获取好友列表
+// @Tags			好友
+// @ID				GetFriendFromLocalCache
+// @Accept			json
+// @Param			token	header	string						true	"im token"
+// @Param			req		body	api.ApiGetFriendFromLocalCacheReq	true	"请求"
+// @Produce		json
+// @Success		0	{object}	api.ApiGetFriendFromLocalCacheResp
+// @Failure		500	{object}	api.Swagger500Resp	"errCode为500 一般为服务器内部错误"
+// @Failure		400	{object}	api.Swagger400Resp	"errCode为400 一般为参数输入错误, token未带上等"
+// @Router			/demo1/get_friend_from_local_cache [get]
+func GetFriendFromLocalCache(c *gin.Context) {
+	var (
+		req    api.ApiGetFriendFromLocalCacheReq
+		resp   api.ApiGetFriendFromLocalCacheResp
+		reqPb  pbDemo1.GetFriendFromLocalCacheReq
+		respPb *pbDemo1.GetFriendFromLocalCacheResp
+	)
+	if err := c.BindJSON(&req); err != nil {
+		log.NewError(req.OperationID, utils.GetSelfFuncName(), "bind json failed", err.Error())
+		c.JSON(http.StatusBadRequest, gin.H{"errCode": 400, "errMsg": "bind json failed " + err.Error()})
+		return
+	}
+	log.NewInfo(req.OperationID, utils.GetSelfFuncName(), "req: ", req)
+
+	if err := utils.CopyStructFields(&reqPb, req); err != nil {
+		log.NewDebug(req.OperationID, utils.GetSelfFuncName(), "CopyStructFields failed", err.Error())
+	}
+	etcdConn := getcdv3.GetDefaultConn(config.Config.Etcd.EtcdSchema, strings.Join(config.Config.Etcd.EtcdAddr, ","), config.Config.RpcRegisterName.Demo1, req.OperationID)
+	if etcdConn == nil {
+		errMsg := req.OperationID + "getcdv3.GetDefaultConn == nil"
+		log.NewError(req.OperationID, errMsg)
+		c.JSON(http.StatusInternalServerError, gin.H{"errCode": 500, "errMsg": errMsg})
+		return
+	}
+	client := pbDemo1.NewChainServiceClient(etcdConn)
+	respPb, err := client.GetFriendFromLocalCache(context.Background(), &reqPb)
 	if err != nil {
 		log.NewError(req.OperationID, utils.GetSelfFuncName(), "CreateOneWorkMoment rpc failed", err.Error())
 		c.JSON(http.StatusInternalServerError, gin.H{"errCode": 500, "errMsg": "CreateOneWorkMoment rpc server failed" + err.Error()})

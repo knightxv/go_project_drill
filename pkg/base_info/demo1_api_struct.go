@@ -13,3 +13,17 @@ type ApiGetFriendFromDBReq struct {
 type ApiGetFriendFromDBResp struct {
 	ApiCommonResp
 }
+
+type ApiGetFriendFromRedisReq struct {
+	ApiCommonReq
+}
+type ApiGetFriendFromRedisResp struct {
+	ApiCommonResp
+}
+
+type ApiGetFriendFromLocalCacheReq struct {
+	ApiCommonReq
+}
+type ApiGetFriendFromLocalCacheResp struct {
+	ApiCommonResp
+}

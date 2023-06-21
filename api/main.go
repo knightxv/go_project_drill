@@ -11,6 +11,8 @@ import (
 	"github.com/knightxv/go-project-drill/pkg/common/log"
 	"github.com/knightxv/go-project-drill/pkg/utils"
 
+	"github.com/knightxv/go-project-drill/internal/api/demo1"
+
 	"github.com/gin-gonic/gin"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
@@ -41,9 +43,9 @@ func main() {
 
 	demo1GroupRouter := r.Group("demo1")
 	{
-		demo1GroupRouter.GET("/v1/friend_list", demo1.GetFriendListByDbQuery)
-		demo1GroupRouter.GET("/v2/friend_list", demo1.GetFriendListByRedisQuery)
-		demo1GroupRouter.GET("/v3/friend_list", demo1.GetFriendListByLocalCacheQuery)
+		demo1GroupRouter.GET("/demo1/get_friend_from_db", demo1.GetFriendFromDB)
+		demo1GroupRouter.GET("/demo1/get_friend_from_redis", demo1.GetFriendFromRedis)
+		demo1GroupRouter.GET("/demo1/get_friend_from_local_cache", demo1.GetFriendFromLocalCache)
 	}
 
 	defaultPorts := config.Config.Api.GinPort

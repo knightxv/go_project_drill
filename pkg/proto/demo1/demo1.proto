@@ -18,6 +18,22 @@ message GetFriendFromDBResp {
   CommonResp CommonResp = 1;
 }
 
+message GetFriendFromRedisReq {
+  string OperationID = 1;
+}
+message GetFriendFromRedisResp {
+  CommonResp CommonResp = 1;
+}
+
+message GetFriendFromLocalCacheReq {
+  string OperationID = 1;
+}
+message GetFriendFromLocalCacheResp {
+  CommonResp CommonResp = 1;
+}
+
 service chainService{
     rpc GetFriendFromDB(GetFriendFromDBReq) returns (GetFriendFromDBResp);
+    rpc GetFriendFromRedis(GetFriendFromRedisReq) returns (GetFriendFromRedisResp);
+    rpc GetFriendFromLocalCache(GetFriendFromLocalCacheReq) returns (GetFriendFromLocalCacheResp);
 }
